@@ -48,12 +48,36 @@ Instead of mechanical buttons that can wear out or leak, we used a solid-state s
 * **Hardware:** A **TTP223** Touch Detector IC is mounted on the PCB, connected to a copper pour acting as the sensor pad.
 * **Tuning:** The sensitivity is tuned (via capacitor selection) to detect touches *through* the 3D-printed enclosure, offering a sleek, button-less experience.
 
-## 🧠 The "Stability-First" Algorithm
-To prevent false readings while the user is walking or drinking, the firmware runs a strict multi-stage filter:
+## 🧠 The "Stability-First" Logic Algorithm
+The code implements a Finite State Machine (FSM) that prevents false readings caused by fluid dynamics (sloshing).
 
-1.  **Motion Gating (BMI270):** The IMU constantly monitors orientation. If the bottle is tilted >10° or acceleration deviates from gravity (1G), measurement is blocked.
-2.  **Hysteresis (The 15s Rule):** Once the bottle is placed down, the system waits for a **15-second stability window**. This allows liquid sloshing and ripples to settle.
-3.  **Statistical Sampling:** The VL53L0X takes samples for **10 seconds**, discarding outliers (noise) and averaging the valid readings to get a final, precise volume.
+### Phase 1: Motion Gating (The BMI270 Watchdog)
+The system polls the IMU every 20ms using a **Madgwick Filter** to calculate Pitch and Roll.
+* **Tilt Threshold:** If the bottle is tilted > `10.0°` (configurable), measurements are blocked.
+* **Motion Detection:** If acceleration vectors deviate from 1G (gravity), the system flags the state as `Unstable`.
+
+### Phase 2: Hysteresis (The 15-Second Rule)
+
+1.  **Stop Detected:** When the bottle becomes upright and still, a timer starts.
+2.  **The Wait:** The system waits for a strict `STABILITY_WAIT_MS` of **15,000ms (15 seconds)**.
+3.  **Re-Verification:** After 15 seconds, the code checks the IMU one last time. If the bottle moved *at all* during that window, the process aborts.
+
+### Phase 3: Statistical Sampling (The 10-Second Scan)
+Once stability is confirmed, the VL53L0X doesn't just take *one* reading. It enters a sampling loop:
+* **Duration:** It scans the water level for **10,000ms (10 seconds)**.
+* **Filtering:** It captures `MAX_SAMPLES` and calculates the mean.
+* **Outlier Removal:** Any sample deviating more than `10mm` from the mean is discarded.
+* **Result:** The final "Cleaned Average" is used to calculate volume.
+
+## 🧮 Volume Calculation & Physics
+The firmware calculates volume based on the differential distance to the liquid surface.
+
+* **Refill vs. Drink Logic:**
+    * **Consumption:** If distance *increases* (`Current > Last` by > 0.05dm), water was consumed.
+    * **Refill:** If distance *decreases* significantly (`Current < Last` by > 0.2dm), the system detects a refill event and resets the baseline without adding to the "Consumed" total.
+* **Unit Conversion:**
+    * `Cross Section Area` = 0.4225 dm²
+    * `Volume Delta` = `Delta Distance` × `Cross Section Area`
 
 ## ⚙️ Operating Modes
 
@@ -62,11 +86,17 @@ To prevent false readings while the user is walking or drinking, the firmware ru
 | **Mode 1: Daily Goal** | Tracks intake against a user-set limit (e.g., 2.5L). | **Automatic:** Resets intake to 0 after 24 Hours from the time when limit set. |
 | **Mode 2: Continuous** | Unrestricted tracking (e.g., for weekly stats). | **Manual:** Only resets when user requests. |
 
-## 🎮 User Interface Controls
-* **Single Tap:** Increment value / Next screen.
-* **Double Tap:** Wake Screen / Confirm / Enter "Set Goal".
-* **Triple Tap:** Switch between Mode 1 and Mode 2.
-* **No actions for 2 seconds:** Display Sleep / Cancels Settings.
+## 🎮 User Interface & Controls
+Interaction is handled entirely through a **capacitive touch pad embedded in the bottle cap**. This button-free design maintains a sleek, waterproof profile while allowing full control over settings and modes.
+
+Simply tap the top of the cap to wake the device or modify settings. The system recognizes specific tap patterns to navigate the menu:
+
+| Gesture | Action | Description |
+| :--- | :--- | :--- |
+| **Single Tap (1x)** | **Increment / Next** | Cycles through menu options or increases the daily goal value. |
+| **Double Tap (2x)** | **Wake / Confirm** | Wakes the OLED screen from sleep. Confirms a selection or enters "Set Goal" mode. |
+| **Triple Tap (3x)** | **Switch Mode** | Toggles the device between **Daily Goal Mode** and **Continuous Tracking Mode**. |
+| **Idle (2 sec)** | **Timeout / Cancel** | If no input is detected for 2 seconds, the screen sleeps or cancels the current setting change. |
 
 ## 👥 Team members
 **Product Design Team:**
