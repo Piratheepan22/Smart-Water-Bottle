@@ -87,16 +87,28 @@ The firmware calculates volume based on the differential distance to the liquid 
 | **Mode 2: Continuous** | Unrestricted tracking (e.g., for weekly stats). | **Manual:** Only resets when user requests. |
 
 ## 🎮 User Interface & Controls
-Interaction is handled entirely through a **capacitive touch pad embedded in the bottle cap**. This button-free design maintains a sleek, waterproof profile while allowing full control over settings and modes.
+Interaction is handled entirely through the **capacitive touch pad embedded in the bottle cap**. The system detects context-sensitive tap patterns depending on whether the device is in normal use or initial setup (after a reset or power loss).
 
-Simply tap the top of the cap to wake the device or modify settings. The system recognizes specific tap patterns to navigate the menu:
+Input Handling Algorithm: The firmware utilizes a non-blocking debounce routine with a 300ms accumulation window (gab between touches for detect multiple touch actions). Input actions are only triggered once the input line has remained idle for the full duration of the window, ensuring reliable distinction between Single, Double, and Triple tap events without false positives.
 
-| Gesture | Action | Description |
+### 1. Initial Setup Mode (Time & Date)
+*Triggered automatically after a hard reset or power loss(power off).*
+
+| Gesture | Action | Function |
 | :--- | :--- | :--- |
-| **Single Tap (1x)** | **Increment / Next** | Cycles through menu options or increases the daily goal value. |
-| **Double Tap (2x)** | **Wake / Confirm** | Wakes the OLED screen from sleep. Confirms a selection or enters "Set Goal" mode. |
-| **Triple Tap (3x)** | **Switch Mode** | Toggles the device between **Daily Goal Mode** and **Continuous Tracking Mode**. |
-| **Idle (2 sec)** | **Timeout / Cancel** | If no input is detected for 2 seconds, the screen sleeps or cancels the current setting change. |
+| **Single Tap (1x)** | **Increment** | Increases the current flashing value (Year -> Month -> Day -> Hour -> Minute). |
+| **Double Tap (2x)** | **Next Step** | Saves the current value and moves to the next field. |
+| **Triple Tap (3x)** | **Back** | Returns to the previous field to correct a mistake. |
+
+### 2. Normal Operation Mode
+*Standard daily usage.*
+
+| Gesture | Action | Function |
+| :--- | :--- | :--- |
+| **Single Tap (1x)** | **Increment / Nav** | Increases setting values or navigates screens. |
+| **Double Tap (2x)** | **Wake / Confirm** | Wakes OLED from sleep. Confirms selection. Enters "Set Goal" mode. |
+| **Triple Tap (3x)** | **Switch Mode** | Toggles between **Daily Goal Mode** and **Continuous Tracking Mode**. |
+| **Idle (2 sec)** | **Timeout** | If no input is detected, the screen sleeps or cancels the current action. |
 
 ## 👥 Team members
 **Product Design Team:**
