@@ -2,7 +2,7 @@
 **A Fully Standalone, Sensor-Fused Hydration Tracker on Custom PCB**
 
 ## 📖 Project Overview
-Developed as part of the **Product Design** module under Electrical and Electronics Engineering at University of Peradeniya, this project is a complete embedded system designed to track daily fluid consumption with high precision.
+Developed as part of the **Embedded Product Design** module under the Department of Electrical and Electronic Engineering, University of Peradeniya, this project is a complete embedded system designed to track daily fluid consumption with high precision.
 
 We challenged the standard IoT approach: instead of relying on Bluetooth and mobile apps, we engineered a device that is **100% autonomous**. It solves the core engineering challenges of fluid tracking—motion artifacts, liquid transparency, and power reliability—through onboard sensor fusion and a custom hardware architecture.
 
