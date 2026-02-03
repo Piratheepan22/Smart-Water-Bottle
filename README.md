@@ -26,8 +26,10 @@ This project moves beyond modular prototyping. We designed a custom **SMD PCB** 
 **The Problem:** Optical sensors (ToF) struggle with clear liquids (light passes through) or reflective liquids (light scatters).
 **Our Solution:** We engineered a buoyant, opaque floating ring.
 * **Mechanism:** The VL53L0X measures the distance to the *ring*, not the liquid.
-* **Benefit:** This makes the bottle **Universal**. It can track water, juice, milk, or any other beverage with equal accuracy, regardless of the liquid's color or transparency.
-
+* **Benefit:** This makes the bottle **Universal**. It can track water, juice, milk, Medical liquids (that requiring intake measurement) or any other beverage with equal accuracy, regardless of the liquid's color or transparency.
+  
+Here the image shows the design of Floating - Ring mechanism
+![float-ring mechanism](images/design_3d/V1_1_8.png)
 
 
 ### 2. Beyond Hydration: Digital Watch Functionality ⌚
