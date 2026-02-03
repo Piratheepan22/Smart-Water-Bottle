@@ -26,8 +26,10 @@ This project moves beyond modular prototyping. We designed a custom **SMD PCB** 
 **The Problem:** Optical sensors (ToF) struggle with clear liquids (light passes through) or reflective liquids (light scatters).
 **Our Solution:** We engineered a buoyant, opaque floating ring.
 * **Mechanism:** The VL53L0X measures the distance to the *ring*, not the liquid.
-* **Benefit:** This makes the bottle **Universal**. It can track water, juice, milk, or any other beverage with equal accuracy, regardless of the liquid's color or transparency.
-
+* **Benefit:** This makes the bottle **Universal**. It can track water, juice, milk, Medical liquids (that requiring intake measurement) or any other beverage with equal accuracy, regardless of the liquid's color or transparency.
+  
+Here the image shows the design of Floating - Ring mechanism
+![float-ring mechanism](images/design_3d/V1_1_8.png)
 
 
 ### 2. Beyond Hydration: Digital Watch Functionality ⌚
@@ -46,12 +48,36 @@ Instead of mechanical buttons that can wear out or leak, we used a solid-state s
 * **Hardware:** A **TTP223** Touch Detector IC is mounted on the PCB, connected to a copper pour acting as the sensor pad.
 * **Tuning:** The sensitivity is tuned (via capacitor selection) to detect touches *through* the 3D-printed enclosure, offering a sleek, button-less experience.
 
-## 🧠 The "Stability-First" Algorithm
-To prevent false readings while the user is walking or drinking, the firmware runs a strict multi-stage filter:
+## 🧠 The "Stability-First" Logic Algorithm
+The code implements a Finite State Machine (FSM) that prevents false readings caused by fluid dynamics (sloshing).
 
-1.  **Motion Gating (BMI270):** The IMU constantly monitors orientation. If the bottle is tilted >10° or acceleration deviates from gravity (1G), measurement is blocked.
-2.  **Hysteresis (The 15s Rule):** Once the bottle is placed down, the system waits for a **15-second stability window**. This allows liquid sloshing and ripples to settle.
-3.  **Statistical Sampling:** The VL53L0X takes samples for **10 seconds**, discarding outliers (noise) and averaging the valid readings to get a final, precise volume.
+### Phase 1: Motion Gating (The BMI270 Watchdog)
+The system polls the IMU every 20ms using a **Madgwick Filter** to calculate Pitch and Roll.
+* **Tilt Threshold:** If the bottle is tilted > `10.0°` (configurable), measurements are blocked.
+* **Motion Detection:** If acceleration vectors deviate from 1G (gravity), the system flags the state as `Unstable`.
+
+### Phase 2: Hysteresis (The 15-Second Rule)
+
+1.  **Stop Detected:** When the bottle becomes upright and still, a timer starts.
+2.  **The Wait:** The system waits for a strict `STABILITY_WAIT_MS` of **15,000ms (15 seconds)**.
+3.  **Re-Verification:** After 15 seconds, the code checks the IMU one last time. If the bottle moved *at all* during that window, the process aborts.
+
+### Phase 3: Statistical Sampling (The 10-Second Scan)
+Once stability is confirmed, the VL53L0X doesn't just take *one* reading. It enters a sampling loop:
+* **Duration:** It scans the water level for **10,000ms (10 seconds)**.
+* **Filtering:** It captures `MAX_SAMPLES` and calculates the mean.
+* **Outlier Removal:** Any sample deviating more than `10mm` from the mean is discarded.
+* **Result:** The final "Cleaned Average" is used to calculate volume.
+
+## 🧮 Volume Calculation & Physics
+The firmware calculates volume based on the differential distance to the liquid surface.
+
+* **Refill vs. Drink Logic:**
+    * **Consumption:** If distance *increases* (`Current > Last` by > 0.05dm), water was consumed.
+    * **Refill:** If distance *decreases* significantly (`Current < Last` by > 0.2dm), the system detects a refill event and resets the baseline without adding to the "Consumed" total.
+* **Unit Conversion:**
+    * `Cross Section Area` = 0.4225 dm²
+    * `Volume Delta` = `Delta Distance` × `Cross Section Area`
 
 ## ⚙️ Operating Modes
 
@@ -60,11 +86,29 @@ To prevent false readings while the user is walking or drinking, the firmware ru
 | **Mode 1: Daily Goal** | Tracks intake against a user-set limit (e.g., 2.5L). | **Automatic:** Resets intake to 0 after 24 Hours from the time when limit set. |
 | **Mode 2: Continuous** | Unrestricted tracking (e.g., for weekly stats). | **Manual:** Only resets when user requests. |
 
-## 🎮 User Interface Controls
-* **Single Tap:** Increment value / Next screen.
-* **Double Tap:** Wake Screen / Confirm / Enter "Set Goal".
-* **Triple Tap:** Switch between Mode 1 and Mode 2.
-* **No actions for 2 seconds:** Display Sleep / Cancels Settings.
+## 🎮 User Interface & Controls
+Interaction is handled entirely through the **capacitive touch pad embedded in the bottle cap**. The system detects context-sensitive tap patterns depending on whether the device is in normal use or initial setup (after a reset or power loss).
+
+Input Handling Algorithm: The firmware utilizes a non-blocking debounce routine with a 300ms accumulation window (gab between touches for detect multiple touch actions). Input actions are only triggered once the input line has remained idle for the full duration of the window, ensuring reliable distinction between Single, Double, and Triple tap events without false positives.
+
+### 1. Initial Setup Mode (Time & Date)
+*Triggered automatically after a hard reset or power loss(power off).*
+
+| Gesture | Action | Function |
+| :--- | :--- | :--- |
+| **Single Tap (1x)** | **Increment** | Increases the current flashing value (Year -> Month -> Day -> Hour -> Minute). |
+| **Double Tap (2x)** | **Next Step** | Saves the current value and moves to the next field. |
+| **Triple Tap (3x)** | **Back** | Returns to the previous field to correct a mistake. |
+
+### 2. Normal Operation Mode
+*Standard daily usage.*
+
+| Gesture | Action | Function |
+| :--- | :--- | :--- |
+| **Single Tap (1x)** | **Increment / Nav** | Increases setting values or navigates screens. |
+| **Double Tap (2x)** | **Wake / Confirm** | Wakes OLED from sleep. Confirms selection. Enters "Set Goal" mode. |
+| **Triple Tap (3x)** | **Switch Mode** | Toggles between **Daily Goal Mode** and **Continuous Tracking Mode**. |
+| **Idle (2 sec)** | **Timeout** | If no input is detected, the screen sleeps or cancels the current action. |
 
 ## 👥 Team members
 **Product Design Team:**
