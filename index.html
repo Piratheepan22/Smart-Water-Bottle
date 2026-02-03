@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Drinking Bottle | Advanced Hydration Tracking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d9ff;
+            --primary-dark: #0099cc;
+            --secondary: #ff006e;
+            --accent: #ffbe0b;
+            --bg-dark: #0a0e27;
+            --bg-card: #1a1f3a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-tech: linear-gradient(135deg, #00d9ff 0%, #0099cc 50%, #667eea 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 0, 110, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: bgShift 20s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        /* Header */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-tech);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            background: var(--gradient-tech);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            animation: glitch 5s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 2px); }
+            94% { transform: translate(2px, -2px); }
+            96% { transform: translate(-2px, -2px); }
+        }
+
+        .hero-subtitle {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: var(--primary);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-description {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 50px;
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 0.5rem;
+            animation: fadeInUp 1s ease-out 0.6s both;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.4);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Section Headers */
+        .section {
+            margin-bottom: 6rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .section-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-tech);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* Table */
+        .tech-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .tech-table thead {
+            background: var(--gradient-tech);
+        }
+
+        .tech-table th {
+            padding: 1.5rem;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--bg-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.9rem;
+        }
+
+        .tech-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+            background: var(--bg-card);
+            transition: background 0.3s ease;
+        }
+
+        .tech-table tbody tr:hover td {
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        .tech-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .component-name {
+            color: var(--primary);
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* Grid Layout */
+        /* Grid Layout */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 15px 50px rgba(0, 217, 255, 0.3);
+        }
+
+        .feature-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        /* Code blocks */
+        code {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            border: 1px solid rgba(255, 190, 11, 0.2);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        li strong {
+            color: var(--primary);
+        }
+
+        /* Image Container */
+        .image-container {
+            margin: 3rem 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid rgba(0, 217, 255, 0.2);
+            box-shadow: 0 10px 50px rgba(0, 217, 255, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .image-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.4);
+        }
+
+        .image-container img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Algorithm Steps */
+        .algorithm-step {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(0, 217, 255, 0.1));
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .algorithm-step:hover {
+            transform: translateX(10px);
+            border-left-color: var(--accent);
+        }
+
+        .algorithm-step h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-member {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .team-member:hover::before {
+            left: 100%;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .team-member-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-member-email {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            word-break: break-all;
+            transition: color 0.3s ease;
+        }
+
+        .team-member-email:hover {
+            color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            border-top: 2px solid rgba(0, 217, 255, 0.2);
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-tech);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .footer-bottom p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .tech-table {
+                font-size: 0.85rem;
+            }
+
+            .tech-table th,
+            .tech-table td {
+                padding: 1rem;
+            }
+
+            .feature-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        .scroll-indicator::after {
+            content: '▼';
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(255, 190, 11, 0.1), rgba(255, 0, 110, 0.1));
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '⚡';
+            position: absolute;
+            top: -1rem;
+            left: 2rem;
+            font-size: 2rem;
+            background: var(--bg-dark);
+            padding: 0 0.5rem;
+        }
+
+        /* Mode Cards */
+        .mode-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .mode-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 2px solid rgba(0, 217, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-tech);
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.3);
+        }
+
+        .mode-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Smart Drinking Bottle</h1>
+            <div class="hero-subtitle">Consumption Tracking System 💧</div>
+            <p class="hero-description">
+                A Fully Standalone, Sensor-Fused Hydration Tracker on Custom PCB
+            </p>
+            <div>
+                <span class="badge">ESP32 C3</span>
+                <span class="badge">Sensor Fusion</span>
+                <span class="badge">100% Autonomous</span>
+                <span class="badge">Custom PCB</span>
+            </div>
+        </div>
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Overview Section -->
+        <section class="section" id="overview">
+            <div class="section-header">
+                <span class="section-icon">📖</span>
+                <h2 class="section-title">Project Overview</h2>
+            </div>
+            <div class="card">
+                <p>Developed as part of the <strong>Embedded Product Design</strong> module under the Department of Electrical and Electronic Engineering, University of Peradeniya, this project is a complete embedded system designed to track daily fluid consumption with high precision.</p>
+                <br>
+                <p>We challenged the standard IoT approach: instead of relying on Bluetooth and mobile apps, we engineered a device that is <strong>100% autonomous</strong>. It solves the core engineering challenges of fluid tracking—motion artifacts, liquid transparency, and power reliability—through onboard sensor fusion and a custom hardware architecture.</p>
+            </div>
+        </section>
+
+        <!-- Hardware Architecture -->
+        <section class="section" id="hardware">
+            <div class="section-header">
+                <span class="section-icon">⚡</span>
+                <h2 class="section-title">Hardware Architecture</h2>
+            </div>
+            <div class="card">
+                <p style="margin-bottom: 2rem; color: var(--text-secondary);">This project moves beyond modular prototyping. We designed a custom <strong>SMD PCB</strong> where components are reflowed directly for signal integrity and compact integration.</p>
+                
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Subsystem</th>
+                            <th>Component</th>
+                            <th>Implementation Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>MCU</strong></td>
+                            <td><span class="component-name">ESP32 C3 Mini</span></td>
+                            <td>RISC-V core handling logic, I2C coordination, and NVS storage.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Depth Sensor</strong></td>
+                            <td><span class="component-name">VL53L0X</span></td>
+                            <td>Time-of-Flight (ToF) sensor for millimeter-precision level detection.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Motion Sensor</strong></td>
+                            <td><span class="component-name">BMI270</span></td>
+                            <td>Chip-down IMU integration for stability validation.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Touch IC</strong></td>
+                            <td><span class="component-name">TTP223</span></td>
+                            <td>Dedicated Touch Detector IC driving a custom copper electrode on the top of the bottle.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Display</strong></td>
+                            <td><span class="component-name">0.96" OLED</span></td>
+                            <td>Displays hydration stats, time, date, and battery status.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Power</strong></td>
+                            <td><span class="component-name">Li-Po / TP4056</span></td>
+                            <td>External charging circuit with ESP32 ADC voltage monitoring.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Key Innovations -->
+        <section class="section" id="features">
+            <div class="section-header">
+                <span class="section-icon">🌟</span>
+                <h2 class="section-title">Key Innovations & Features</h2>
+            </div>
+
+            <div class="feature-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="feature-number">01</div>
+                    <h3 class="feature-title">The Floating Ring Mechanism</h3>
+                    <p class="feature-description"><strong>The Problem:</strong> Optical sensors (ToF) struggle with clear liquids (light passes through) or reflective liquids (light scatters).</p>
+                    <p class="feature-description"><strong>Our Solution:</strong> We engineered a buoyant, opaque floating ring.</p>
+                    <ul>
+                        <li><strong>Mechanism:</strong> The VL53L0X measures the distance to the <em>ring</em>, not the liquid.</li>
+                        <li><strong>Benefit:</strong> This makes the bottle <strong>Universal</strong>. It can track water, juice, milk, Medical liquids (that requiring intake measurement) or any other beverage with equal accuracy, regardless of the liquid's color or transparency.</li>
+                    </ul>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="feature-number">02</div>
+                    <h3 class="feature-title">Digital Watch Functionality ⌚</h3>
+                    <p class="feature-description">Since this device is designed to sit on a user's desk all day, we integrated full time-keeping features.</p>
+                    <ul>
+                        <li><strong>OLED Dashboard:</strong> The main screen displays the current <strong>Time (HH:MM)</strong> and <strong>Date (DD/MM)</strong> alongside hydration stats.</li>
+                        <li><strong>RTC Logic:</strong> Uses a software-based Real-Time Clock to manage date rollovers (automatically resetting the hydration counter after 24Hrs fron limit set time).</li>
+                    </ul>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="feature-number">03</div>
+                    <h3 class="feature-title">Power Interruption Resilience</h3>
+                    <p class="feature-description">The system is built to handle the real world, where batteries die and devices lose power.</p>
+                    <ul>
+                        <li><strong>Non-Volatile Storage (NVS):</strong> We utilize the ESP32 <code>Preferences</code> library to commit data to flash memory.</li>
+                        <li><strong>What is Saved:</strong> Current Intake, Daily Goal, and User Settings.</li>
+                        <li><strong>Scenario:</strong> If the battery runs out at 2:00 PM with 1.5L consumed, and you charge it back up at 3:00 PM, the device reboots remembering exactly where you left off.</li>
+                    </ul>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card">
+                    <div class="feature-number">04</div>
+                    <h3 class="feature-title">Custom Capacitive Touch</h3>
+                    <p class="feature-description">Instead of mechanical buttons that can wear out or leak, we used a solid-state solution.</p>
+                    <ul>
+                        <li><strong>Hardware:</strong> A <strong>TTP223</strong> Touch Detector IC is mounted on the PCB, connected to a copper pour acting as the sensor pad.</li>
+                        <li><strong>Tuning:</strong> The sensitivity is tuned (via capacitor selection) to detect touches <em>through</em> the 3D-printed enclosure, offering a sleek, button-less experience.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Floating Ring Image -->
+            <div class="highlight-box">
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">Here the image shows the design of Floating - Ring mechanism</p>
+                <div class="image-container">
+                    <img src="images/design_3d/V1_1_8.png" alt="Floating Ring Mechanism Design">
+                </div>
+            </div>
+        </section>
+
+        <!-- Algorithm Section -->
+        <section class="section" id="algorithm">
+            <div class="section-header">
+                <span class="section-icon">🧠</span>
+                <h2 class="section-title">The "Stability-First" Logic Algorithm</h2>
+            </div>
+            <div class="card">
+                <p style="margin-bottom: 2rem;">The code implements a Finite State Machine (FSM) that prevents false readings caused by fluid dynamics (sloshing).</p>
+
+                <div class="algorithm-step">
+                    <h3>Phase 1: Motion Gating (The BMI270 Watchdog)</h3>
+                    <p>The system polls the IMU every 20ms using a <strong>Madgwick Filter</strong> to calculate Pitch and Roll.</p>
+                    <ul>
+                        <li><strong>Tilt Threshold:</strong> If the bottle is tilted > <code>10.0°</code> (configurable), measurements are blocked.</li>
+                        <li><strong>Motion Detection:</strong> If acceleration vectors deviate from 1G (gravity), the system flags the state as <code>Unstable</code>.</li>
+                    </ul>
+                </div>
+
+                <div class="algorithm-step">
+                    <h3>Phase 2: Hysteresis (The 15-Second Rule)</h3>
+                    <ol>
+                        <li><strong>Stop Detected:</strong> When the bottle becomes upright and still, a timer starts.</li>
+                        <li><strong>The Wait:</strong> The system waits for a strict <code>STABILITY_WAIT_MS</code> of <strong>15,000ms (15 seconds)</strong>.</li>
+                        <li><strong>Re-Verification:</strong> After 15 seconds, the code checks the IMU one last time. If the bottle moved <em>at all</em> during that window, the process aborts.</li>
+                    </ol>
+                </div>
+
+                <div class="algorithm-step">
+                    <h3>Phase 3: Statistical Sampling (The 10-Second Scan)</h3>
+                    <p>Once stability is confirmed, the VL53L0X doesn't just take <em>one</em> reading. It enters a sampling loop:</p>
+                    <ul>
+                        <li><strong>Duration:</strong> It scans the water level for <strong>10,000ms (10 seconds)</strong>.</li>
+                        <li><strong>Filtering:</strong> It captures <code>MAX_SAMPLES</code> and calculates the mean.</li>
+                        <li><strong>Outlier Removal:</strong> Any sample deviating more than <code>10mm</code> from the mean is discarded.</li>
+                        <li><strong>Result:</strong> The final "Cleaned Average" is used to calculate volume.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Volume Calculation -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-icon">🧮</span>
+                <h2 class="section-title">Volume Calculation & Physics</h2>
+            </div>
+            <div class="card">
+                <p style="margin-bottom: 1.5rem;">The firmware calculates volume based on the differential distance to the liquid surface.</p>
+                
+                <ul>
+                    <li><strong>Refill vs. Drink Logic:</strong>
+                        <ul>
+                            <li><strong>Consumption:</strong> If distance <em>increases</em> (<code>Current > Last</code> by > 0.05dm), water was consumed.</li>
+                            <li><strong>Refill:</strong> If distance <em>decreases</em> significantly (<code>Current < Last</code> by > 0.2dm), the system detects a refill event and resets the baseline without adding to the "Consumed" total.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Unit Conversion:</strong>
+                        <ul>
+                            <li><code>Cross Section Area</code> = 0.4225 dm²</li>
+                            <li><code>Volume Delta</code> = <code>Delta Distance</code> × <code>Cross Section Area</code></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Operating Modes -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-icon">⚙️</span>
+                <h2 class="section-title">Operating Modes</h2>
+            </div>
+
+            <div class="mode-cards">
+                <div class="mode-card">
+                    <h3 class="mode-title">Mode 1: Daily Goal</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong>Functionality:</strong> Tracks intake against a user-set limit (e.g., 2.5L).</p>
+                    <p style="color: var(--accent);"><strong>Reset Behavior:</strong> Automatic - Resets intake to 0 after 24 Hours from the time when limit set.</p>
+                </div>
+
+                <div class="mode-card">
+                    <h3 class="mode-title">Mode 2: Continuous</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong>Functionality:</strong> Unrestricted tracking (e.g., for weekly stats).</p>
+                    <p style="color: var(--accent);"><strong>Reset Behavior:</strong> Manual - Only resets when user requests.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Interface -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-icon">🎮</span>
+                <h2 class="section-title">User Interface & Controls</h2>
+            </div>
+            <div class="card">
+                <p style="margin-bottom: 2rem;">Interaction is handled entirely through the <strong>capacitive touch pad embedded in the bottle cap</strong>. The system detects context-sensitive tap patterns depending on whether the device is in normal use or initial setup (after a reset or power loss).</p>
+                
+                <div class="highlight-box">
+                    <p><strong>Input Handling Algorithm:</strong> The firmware utilizes a non-blocking debounce routine with a 300ms accumulation window (gab between touches for detect multiple touch actions). Input actions are only triggered once the input line has remained idle for the full duration of the window, ensuring reliable distinction between Single, Double, and Triple tap events without false positives.</p>
+                </div>
+
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--primary); margin: 2rem 0 1rem;">1. Initial Setup Mode (Time & Date)</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;"><em>Triggered automatically after a hard reset or power loss(power off).</em></p>
+                
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Gesture</th>
+                            <th>Action</th>
+                            <th>Function</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Single Tap (1x)</strong></td>
+                            <td><strong>Increment</strong></td>
+                            <td>Increases the current flashing value (Year → Month → Day → Hour → Minute).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Double Tap (2x)</strong></td>
+                            <td><strong>Next Step</strong></td>
+                            <td>Saves the current value and moves to the next field.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Triple Tap (3x)</strong></td>
+                            <td><strong>Back</strong></td>
+                            <td>Returns to the previous field to correct a mistake.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--primary); margin: 3rem 0 1rem;">2. Normal Operation Mode</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;"><em>Standard daily usage.</em></p>
+                
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Gesture</th>
+                            <th>Action</th>
+                            <th>Function</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Single Tap (1x)</strong></td>
+                            <td><strong>Increment / Nav</strong></td>
+                            <td>Increases setting values or navigates screens.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Double Tap (2x)</strong></td>
+                            <td><strong>Wake / Confirm</strong></td>
+                            <td>Wakes OLED from sleep. Confirms selection. Enters "Set Goal" mode.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Triple Tap (3x)</strong></td>
+                            <td><strong>Switch Mode</strong></td>
+                            <td>Toggles between <strong>Daily Goal Mode</strong> and <strong>Continuous Tracking Mode</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Idle (2 sec)</strong></td>
+                            <td><strong>Timeout</strong></td>
+                            <td>If no input is detected, the screen sleeps or cancels the current action.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="section" id="team">
+            <div class="section-header">
+                <span class="section-icon">👥</span>
+                <h2 class="section-title">Team Members</h2>
+            </div>
+            <!-- <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;"><strong>Product Design Team:</strong></p> -->
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-member-name">Piratheepan Mathivathanan</div>
+                    <div class="EEE">Department of Electrical & Electronics Engineering</div>
+                    <div class="uop">University of Peradeinya</div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-name">Sarusan Sivanesan</div>
+                    <div class="EEE">Department of Electrical & Electronics Engineering</div>
+                    <div class="uop">University of Peradeinya</div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-name">E. M. T. L. K. Ekanayake </div>
+                    <div class="EEE">Department of Electrical & Electronics Engineering</div>
+                    <div class="uop">University of Peradeinya</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About the Project</h3>
+                <p>A fully autonomous hydration tracking system developed as part of the Embedded Product Design module at the University of Peradeniya.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Department</h3>
+                <p>Department of Electrical and Electronic Engineering<br>
+                University of Peradeniya<br>
+                Peradeniya, Sri Lanka</p>
+            </div>
+            <div class="footer-section">
+                <h3>Technologies</h3>
+                <p>ESP32 C3 • VL53L0X ToF Sensor•<br>
+                BMI270 IMU • Custom PCB Design•<br>
+                Embedded C/C++ • Sensor Fusion• <br>
+                firmware architecture </p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>For more information about this project, please contact through e20293@eng.pdn.ac.lk </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Smart Drinking Bottle Project. All rights reserved.</p>
+            <!-- <p>Developed by the Embedded Product Design Team</p> -->
+            <div class="footer-links">
+                <a href="#overview">Overview</a>
+                <a href="#hardware">Hardware</a>
+                <a href="#features">Features</a>
+                <a href="#algorithm">Algorithm</a>
+                <a href="#team">Team</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
