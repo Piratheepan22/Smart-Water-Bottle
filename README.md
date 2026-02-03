@@ -2,7 +2,7 @@
 **A Fully Standalone, Sensor-Fused Hydration Tracker on Custom PCB**
 
 ## 📖 Project Overview
-Developed as part of the **EE356 Product Design** module, this project is a complete embedded system designed to track daily fluid consumption with high precision.
+Developed as part of the **Product Design** module under Electrical and Electronics Engineering at University of Peradeniya, this project is a complete embedded system designed to track daily fluid consumption with high precision.
 
 We challenged the standard IoT approach: instead of relying on Bluetooth and mobile apps, we engineered a device that is **100% autonomous**. It solves the core engineering challenges of fluid tracking—motion artifacts, liquid transparency, and power reliability—through onboard sensor fusion and a custom hardware architecture.
 
@@ -64,12 +64,10 @@ To prevent false readings while the user is walking or drinking, the firmware ru
 * **Single Tap:** Increment value / Next screen.
 * **Double Tap:** Wake Screen / Confirm / Enter "Set Goal".
 * **Triple Tap:** Switch between Mode 1 and Mode 2.
+* **No actions for 2 seconds:** Display Sleep / Cancels Settings.
 
-## 👥 Team & Credits
-**EE356 Product Design Team:**
-* **[Your Name]** – Firmware Architecture, PCB Layout, Algorithm Design.
-* **Kavin** – [Role, e.g., Hardware Assembly & Mechanics]
-* **Ekanayake** – [Role, e.g., Enclosure Design & Testing]
-
----
-**License:** Open Source (MIT)
+## 👥 Team members
+**Product Design Team:**
+* **Piratheepan Mathivathanan** 
+* **Sarusan Sivanesan**
+* **E. M. T. L. K. Ekanayake** 
