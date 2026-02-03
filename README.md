@@ -112,6 +112,7 @@ Input Handling Algorithm: The firmware utilizes a non-blocking debounce routine 
 
 ## 👥 Team members
 **Product Design Team:**
-* **Piratheepan Mathivathanan** 
+* **Piratheepan Mathivathanan**
+* **E. M. T. L. K. Ekanayake**  
 * **Sarusan Sivanesan**
-* **E. M. T. L. K. Ekanayake** 
+
